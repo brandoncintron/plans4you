@@ -19,7 +19,8 @@ if not uri:
 print("Attempting to connect to MongoDB...")
 client = MongoClient(uri, tlsCAFile=certifi.where())
 print("Successfully connected to MongoDB")
-db = client.sample_mflix 
+benefits_and_cost_sharing = client.benefits_and_cost_sharing
+medicaid_and_chip_eligibility = client.medicaid_and_chip_eligibility_levels
 
 app = Flask(__name__)
 
@@ -27,27 +28,51 @@ app = Flask(__name__)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-@app.route("/api/comments", methods=["GET"])
-def get_comments():
+@app.route("/api/benefits_and_cost_sharing", methods=["GET"])
+def get_benefits_and_cost_sharing():
     if request.method == "GET":
         try:
-            print("Attempting to query comments collection")
+            print("Attempting to query data collection")
             # Check if the collection exists
-            collections = db.list_collection_names()
+            collections = benefits_and_cost_sharing.list_collection_names()
             print(f"Available collections: {collections}")
             
-            if "comments" not in collections:
-                print("Comments collection not found")
-                return jsonify({"error": "Comments collection not found"}), 404
+            if "data" not in collections:
+                print("data collection not found")
+                return jsonify({"error": "data collection not found"}), 404
                 
-            # Get comments from the comments collection and limit to 20
-            comments = list(db.comments.find({}).limit(20))
+            data = list(benefits_and_cost_sharing.data.find({}).limit(200))
             
             # Convert ObjectId to string for JSON serialization
-            json_comments = json.loads(json_util.dumps(comments))
+            json_data = json.loads(json_util.dumps(data))
             
-            print(f"Successfully retrieved {len(json_comments)} comments")
-            return jsonify(json_comments)
+            print(f"Successfully retrieved {len(json_data)} data")
+            return jsonify(json_data)
+        except Exception as e:
+            print(f"Error querying MongoDB: {str(e)}")
+            print(traceback.format_exc())
+            return jsonify({"error": str(e)}), 500
+        
+@app.route("/api/medicaid_and_chip_eligibility", methods=["GET"])
+def get_medicaid_and_chip_eligibility():
+    if request.method == "GET":
+        try:
+            print("Attempting to query data collection")
+            # Check if the collection exists
+            collections = medicaid_and_chip_eligibility.list_collection_names()
+            print(f"Available collections: {collections}")
+            
+            if "data" not in collections:
+                print("data collection not found")
+                return jsonify({"error": "data collection not found"}), 404
+                
+            data = list(medicaid_and_chip_eligibility.data.find({}))
+            
+            # Convert ObjectId to string for JSON serialization
+            json_data = json.loads(json_util.dumps(data))
+            
+            print(f"Successfully retrieved {len(json_data)} data")
+            return jsonify(json_data)
         except Exception as e:
             print(f"Error querying MongoDB: {str(e)}")
             print(traceback.format_exc())
