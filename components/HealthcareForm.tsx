@@ -7,8 +7,6 @@ import {
   HealthcareFormValues,
 } from "@/schema/healthcare-form";
 import { usStates } from "@/data/usStates";
-import NumberInput from "@/components/NumberInput";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -27,7 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import RiskToleranceSlider from "./RiskToleranceSlider";
 
 interface HealthcareFormProps {
   onFormSubmit: (data: HealthcareFormValues) => void;
@@ -48,7 +45,6 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
       state: "",
       income: "",
       dentalPlanRequired: "no",
-      riskTolerance: 50,
       consentGiven: false,
     },
   });
@@ -78,7 +74,25 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
           control={form.control}
           name="age"
           render={({ field }) => (
-            <NumberInput field={field} label="Age" placeholder="35" />
+            <FormItem>
+              <FormLabel>Age</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="35"
+                  {...field}
+                  value={field.value || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Only allow digits
+                    if (value === "" || /^\d+$/.test(value)) {
+                      field.onChange(value === "" ? "" : parseInt(value, 10));
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
 
@@ -86,7 +100,25 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
           control={form.control}
           name="dependents"
           render={({ field }) => (
-            <NumberInput field={field} label="Dependents" placeholder="2" />
+            <FormItem>
+              <FormLabel>Dependents</FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="2"
+                  {...field}
+                  value={field.value || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Only allow digits
+                    if (value === "" || /^\d+$/.test(value)) {
+                      field.onChange(value === "" ? "" : parseInt(value, 10));
+                    }
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
         />
 
@@ -97,7 +129,17 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
             <FormItem>
               <FormLabel>Zip Code</FormLabel>
               <FormControl>
-                <Input placeholder="99501" {...field} />
+                <Input 
+                  placeholder="99501" 
+                  {...field} 
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    // Only allow digits
+                    if (value === "" || /^\d+$/.test(value)) {
+                      field.onChange(value);
+                    }
+                  }}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -171,7 +213,7 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
           name="dentalPlanRequired"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Dental Plan Required</FormLabel>
+              <FormLabel>Dental Plan Required?</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 value={field.value || "no"}
@@ -186,27 +228,6 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
                   <SelectItem value="no">No</SelectItem>
                 </SelectContent>
               </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="riskTolerance"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Risk Tolerance</FormLabel>
-              <FormControl>
-                <div className="w-full">
-                  <RiskToleranceSlider 
-                    value={[field.value]} 
-                    onValueChange={(values) => {
-                      field.onChange(values[0]);
-                    }}
-                  />
-                </div>
-              </FormControl>
               <FormMessage />
             </FormItem>
           )}

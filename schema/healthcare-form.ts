@@ -26,7 +26,6 @@ export const healthcareFormSchema = z.object({
   dentalPlanRequired: z.enum(["yes", "no"], {
     required_error: "Please select if dental plan is required.",
   }),
-  riskTolerance: z.coerce.number().min(0).max(100).default(50),
   consentGiven: z.boolean({
     required_error: "You must consent to the privacy notice before submitting.",
   }).refine(val => val === true, {
