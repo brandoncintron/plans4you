@@ -11,6 +11,10 @@ from dotenv import load_dotenv
 # Import the agent function
 from agent import decisionAgent
 
+# --- Flask App Setup ---
+app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -42,9 +46,7 @@ except Exception as e:
     # Exit if DB connection fails
     exit(f"Failed to connect to MongoDB: {e}")
 
-# --- Flask App Setup ---
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+
 
 # --- API Routes ---
 
