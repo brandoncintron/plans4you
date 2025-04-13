@@ -1,8 +1,24 @@
 import React from "react";
 import { HealthInsuranceRecommendation, PlanRecommendation } from "@/data/healthInsuranceRecommendations";
 
+// Define interface for API response structure
+interface ApiResponse {
+  status?: string;
+  message?: string;
+  analysis?: {
+    best_plan_id?: string;
+    ranked_plans?: PlanRecommendation[];
+  };
+  ranked_plans?: PlanRecommendation[];
+}
+
+// Add plans property to HealthInsuranceRecommendation if it doesn't have it
+interface ExtendedHealthInsuranceRecommendation extends HealthInsuranceRecommendation {
+  plans: PlanRecommendation[];
+}
+
 interface AIRecommendationProps {
-  recommendation: string | HealthInsuranceRecommendation | any;
+  recommendation: string | ExtendedHealthInsuranceRecommendation | ApiResponse;
 }
 
 const AIRecommendations: React.FC<AIRecommendationProps> = ({ recommendation }) => {
@@ -18,12 +34,25 @@ const AIRecommendations: React.FC<AIRecommendationProps> = ({ recommendation }) 
     );
   }
   
-  // Extract plans from the recommendation
-  // Check if we have the plans array directly or if it's inside an analysis object
-  const plans = recommendation.plans || 
-                (recommendation.analysis && recommendation.analysis.ranked_plans) || 
-                (recommendation.ranked_plans) || 
-                [];
+  // Extract plans from the recommendation based on its structure
+  let plansList: PlanRecommendation[] = [];
+  
+  // Check if it has direct plans property (HealthInsuranceRecommendation)
+  if ('plans' in recommendation && Array.isArray(recommendation.plans)) {
+    plansList = recommendation.plans;
+  } 
+  // Check if it has analysis with ranked_plans (ApiResponse)
+  else if ('analysis' in recommendation && 
+           recommendation.analysis && 
+           'ranked_plans' in recommendation.analysis && 
+           Array.isArray(recommendation.analysis.ranked_plans)) {
+    plansList = recommendation.analysis.ranked_plans;
+  }
+  // Check if it has direct ranked_plans (ApiResponse)
+  else if ('ranked_plans' in recommendation && 
+           Array.isArray(recommendation.ranked_plans)) {
+    plansList = recommendation.ranked_plans;
+  }
   
   return (
     <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-100">
@@ -32,8 +61,8 @@ const AIRecommendations: React.FC<AIRecommendationProps> = ({ recommendation }) 
       {/* Plan Recommendations */}
       <div>
         <h3 className="text-lg font-medium text-blue-700 mb-3">Recommended Plans</h3>
-        {plans && plans.length > 0 ? (
-          plans.map((plan: PlanRecommendation) => (
+        {plansList.length > 0 ? (
+          plansList.map((plan: PlanRecommendation) => (
             <div key={plan.planId} className="mb-4 p-4 bg-white rounded-md border-l-4 border-blue-500">
               <div className="flex justify-between items-center">
                 <h4 className="text-md font-semibold">
