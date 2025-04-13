@@ -77,21 +77,11 @@ def find_matching_policies(userProfile, db):
 
 
 #details can be changed
-def format_policies_for_prompt(policies):
-    policies_list = []
-    for policy in policies:
-        plan_data = {"Plan ID": policy.get("Plan ID", "N/A"), "benefits": []}
-        for benefit_item in policy.get("benefits", []):
-            benefit_data = {
-                "Benefit": benefit_item.get("Benefit", "N/A"),
-                "Covered": benefit_item.get("Covered", "N/A"),
-                "Copay Tier 1": benefit_item.get("Copay Tier 1", "N/A"),
-                "Coinsurance Tier 1": benefit_item.get("Coinsurance Tier 1", "N/A"),
-                # Add other relevant benefit details if present
-            }
-            plan_data["benefits"].append(benefit_data)
-        policies_list.append(plan_data)
-    return json.dumps(policies_list, indent=2) # indent for readability (optional)
+def format_plans_for_agent_prompt(plans, user_profile):
+    formatted_list = []
+    for plan in plans:
+        formatted_list.append(json.dumps(plan, indent=2))
+    return "\n---\n".join(formatted_list)
 
 
 def insuranceAgent(userProfile, policies):
