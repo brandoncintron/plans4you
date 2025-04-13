@@ -2,3 +2,6 @@ flask
 flask-cors
 google-generativeai
 certifi
+pymongo
+python-dotenv
+bson
