@@ -39,10 +39,10 @@ def format_policies_for_prompt(policies):
 
 def insuranceAgent(userProfile, policies):
     prompt = """
-    As a helpful insurance agent, recommend the top 5-10 policies from the following: {policies}
+    As a helpful insurance agent, recommend the top 3 policies from the following: {policies}
     Consider the user's needs: {userProfile}
-    For each recommendation, concisely explain key features, benefits, and drawbacks, highlighting why it's suitable.
-    Write maximum 2-3 paragraphs.
+    For each recommendation, concisely explain key features, benefits, and drawbacks, highlighting why it's suitable. 
+    Maximum 2-3 reasons.
     """
     formatted_prompt = prompt.format(userProfile=userProfile, policies=policies)
 
@@ -57,9 +57,9 @@ def financialAgent(userProfile, policies):
     income = userProfile.get('income')
 
     prompt = """
-    As a financial advisor, analyze the cost-effectiveness and long-term financial implications of the following top 5-10 policies: {policies}
-    Considering the user's income of ${income}, explain the value proposition of each and why one might be preferred over another.
-    Write maximum 2-3 paragraphs.
+    As a financial advisor, analyze the cost-effectiveness and long-term financial implications of the following policies: {policies}
+    Considering the user's income of ${income}, explain the value proposition of each and why one might be preferred over another, pick top 3 policies.
+    Maximum 2-3 reasons.
     """
     formatted_prompt = prompt.format(income=income, policies=policies)
 
