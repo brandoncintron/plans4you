@@ -225,15 +225,3 @@ def get_medicaid_and_chip_eligibility():
         print(f"Error querying Medicaid/CHIP data: {str(e)}")
         print(traceback.format_exc())
         return jsonify({"error": "Failed to retrieve eligibility data.", "details": str(e)}), 500
-
-# Handler for Vercel serverless function
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    """Handler for Vercel serverless function - catches all routes."""
-    return jsonify({"error": f"Path not found: {path}"}), 404
-
-# Required for Vercel serverless functions
-def handler(environ, start_response):
-    """WSGI handler for Vercel serverless functions."""
-    return app(environ, start_response)
