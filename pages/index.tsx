@@ -4,10 +4,8 @@ import PageLayout from "@/components/PageLayout";
 import FormHeader from "@/components/FormHeader";
 import HealthcareForm from "@/components/HealthcareForm";
 import AIRecommendations from "@/components/AIRecommendations";
-import {
-  HealthInsuranceRecommendation,
-} from "@/data/healthInsuranceRecommendations";
-import axios from 'axios';
+import { HealthInsuranceRecommendation } from "@/data/healthInsuranceRecommendations";
+import axios from "axios";
 
 function HealthcareAIAssistant() {
   const [aiResponse, setAiResponse] = useState<
@@ -19,33 +17,29 @@ function HealthcareAIAssistant() {
     // Show loading state
     setIsLoading(true);
 
-    setTimeout(async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5328/api/benefits_and_cost_sharing",
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            }
-          }
-        );
+    try {
+      const response = await axios.post(
+        "http://localhost:5328/api/benefits_and_cost_sharing",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-        console.log("Response status:", response.status);
-        console.log("Data sent to server:", data);
+      console.log("Response status:", response.status);
+      console.log("Data sent to server:", data);
 
-        const recommendationData = response.data;
-        console.log("Received response:", recommendationData);
-        setAiResponse(recommendationData);
-      } catch (error) {
-        console.error("Error fetching recommendations:", error);
-        setAiResponse(
-          "Sorry, we encountered an error processing your request."
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    }, 3000);
+      const recommendationData = response.data;
+      console.log("Received response:", recommendationData);
+      setAiResponse(recommendationData);
+    } catch (error) {
+      console.error("Error fetching recommendations:", error);
+      setAiResponse("Sorry, we encountered an error processing your request.");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
