@@ -27,7 +27,7 @@ It uses real-world data from public healthcare datasets and leverages AI agents 
 |----------|-----------------------------|
 | Core     | Python 3.10+                |
 | Logic    | `pandas`,`google-generativeai` |
-| Input    | Terminal prompts / CLI      |
+| Input    | Through Webpage      |
 | Output   | AI-generated plan summary & JSON response |
 | Data     | Public CSVs (Benefits + Medicaid Eligibility) |
 
