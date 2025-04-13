@@ -9,9 +9,7 @@ import os
 from flask_cors import CORS  # Import CORS
 # Import pandas and AI-related libraries
 import pandas as pd  # Import pandas
-from agent_ai import insuranceAgent, financialAgent, decisionAgent
-# import pandas as pd
-# import your_ai_library  # e.g., scikit-learn, tensorflow, etc.
+from agent_ai import insuranceAgent, financialAgent, decisionAgent, format_plans_for_agent_prompt
 
 load_dotenv()
 
@@ -104,10 +102,10 @@ def get_benefits_and_cost_sharing():
                     user_profile = form_data # Use the dictionary for the AI agent
                     # Assuming agent_ai.format_plans_for_agent_prompt exists and is imported
                     # formatted_plans_prompt = agent_ai.format_plans_for_agent_prompt(json_data, user_profile)
-
-                    insurance_recommendation = insuranceAgent(user_profile, json_data) # Pass json_data directly
-                    financial_analysis = financialAgent(user_profile, json_data)     # Pass json_data directly
-                    decision_result = decisionAgent(user_profile, insurance_recommendation, financial_analysis, json_data)
+                    format_plans_for_agent_prompt(json_data, user_profile)
+                    insurance_recommendation = insuranceAgent(user_profile, json_data)
+                    financial_analysis = financialAgent(user_profile, json_data) 
+                    decision_result = decisionAgent(user_profile, insurance_recommendation, financial_analysis)
 
                     ranked_plans = decision_result.get("ranked_plans", [])
                     print("AI model processing complete.")
