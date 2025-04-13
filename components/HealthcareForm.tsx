@@ -1,6 +1,7 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import type { Resolver } from "react-hook-form";
 import {
   healthcareFormSchema,
   HealthcareFormValues,
@@ -38,7 +39,7 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
   isLoading,
 }) => {
   const form = useForm<HealthcareFormValues>({
-    resolver: zodResolver(healthcareFormSchema),
+    resolver: zodResolver(healthcareFormSchema) as Resolver<HealthcareFormValues>,
     defaultValues: {
       name: "",
       age: 0,

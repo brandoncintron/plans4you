@@ -7,9 +7,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ControllerRenderProps } from "react-hook-form";
+import { HealthcareFormValues } from "@/schema/healthcare-form";
 
 interface NumberInputProps {
-  field: ControllerRenderProps<Record<string, unknown>, string>;
+  field: ControllerRenderProps<HealthcareFormValues, keyof HealthcareFormValues>;
   label: string;
   placeholder: string;
 }
@@ -27,7 +28,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
           type="number"
           placeholder={placeholder}
           {...field}
-          value={field.value || ""}
+          value={typeof field.value === 'number' ? field.value : ""}
           onChange={(e) => {
             const value = e.target.value;
             // Only allow digits
