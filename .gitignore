@@ -2,6 +2,7 @@
 
 # dependencies
 /client/node_modules
+/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,6 +16,7 @@
 
 # next.js
 /client/.next/
+.next/
 /out/
 
 # production
@@ -32,6 +34,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 client/.env*
+.env*
 
 # vercel
 .vercel
