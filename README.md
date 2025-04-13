@@ -1,1 +1,0 @@
-# HackaBull-project
