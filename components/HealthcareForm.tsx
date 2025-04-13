@@ -38,7 +38,7 @@ const HealthcareForm: React.FC<HealthcareFormProps> = ({
   isLoading,
 }) => {
   const form = useForm<HealthcareFormValues>({
-    resolver: zodResolver(healthcareFormSchema) as any,
+    resolver: zodResolver(healthcareFormSchema),
     defaultValues: {
       name: "",
       age: 0,
