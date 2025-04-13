@@ -12,6 +12,12 @@ genai.configure(api_key = "AIzaSyBt82sjZYHLLHNrBelLjooQPizhd8mLhaA")
 # Now you can use the GenerativeModel class to interact with Gemini
 GEMINI_MODEL = genai.GenerativeModel("gemini-2.0-flash") # Or your preferred model
 
+def format_plans_for_agent_prompt(plans, user_profile):
+    formatted_list = []
+    for plan in plans:
+        formatted_list.append(json.dumps(plan, indent=2))
+    return "\n---\n".join(formatted_list)
+
 
 #details can be changed
 def format_policies_for_prompt(policies):
