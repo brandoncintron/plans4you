@@ -13,9 +13,6 @@ function HealthcareAIAssistant() {
     // Show loading state
     setIsLoading(true);
 
-    // Remove logging of PHI data for prod
-     console.log(data);
-
     // Simulate AI processing with a timeout
     setTimeout(() => {
       // Example AI response
