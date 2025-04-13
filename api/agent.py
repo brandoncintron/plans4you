@@ -85,7 +85,7 @@ def decisionAgent(user_profile: dict, plans_data: list):
 
     # **Updated Prompt Instructions**
     prompt = f"""
-    You are an expert AI health insurance advisor. Your goal is to analyze a list of potential health insurance plans and recommend the best options for a specific user based on their profile and the plan details.
+    You are an expert AI health insurance and benefits advisor. Your goal is to analyze a list of potential health benefits in various insurance plans and recommend the best options for a specific user based on their profile and the plan details.
 
     **User Profile:**
     * Name: {user_name}
@@ -133,7 +133,7 @@ def decisionAgent(user_profile: dict, plans_data: list):
     **Instructions:**
     * Identify the single best plan and put its 'planId' in `best_plan_id`.
     * Create a ranked list (`ranked_plans`) starting with the best plan (rank 1). Include the Plan ID (`planId` - camelCase), the rank number (`rank`), the boolean `isBestPlan` field, and a `justification`.
-    * Base your justifications *only* on the provided user profile and plan data JSON. Be specific.
+    * Base your justifications *only* on the provided user profile and plan data JSON. Explain why the chosen plan is the best in terms of the benefits provided both medically and in an cost effective manner. Be specific.
     * Ensure the `planId` values exactly match those in the input JSON data.
     """
 
