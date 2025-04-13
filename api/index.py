@@ -105,7 +105,7 @@ def get_benefits_and_cost_sharing():
                     format_plans_for_agent_prompt(json_data, user_profile)
                     insurance_recommendation = insuranceAgent(user_profile, json_data)
                     financial_analysis = financialAgent(user_profile, json_data) 
-                    decision_result = decisionAgent(user_profile, insurance_recommendation, financial_analysis)
+                    decision_result = decisionAgent(user_profile, insurance_recommendation, financial_analysis, json_data)
 
                     ranked_plans = decision_result.get("ranked_plans", [])
                     print("AI model processing complete.")
@@ -137,26 +137,6 @@ def get_benefits_and_cost_sharing():
                     "status": "success",
                     "message": f"Found {len(json_data)} plans for state: {state} and processed by AI.",
                     "plans": ranked_plans
-                })
-            else:
-                # If AI processing failed or no suitable plans were found by AI,
-                # return the hardcoded examples as a last resort.
-                return jsonify({
-                    "status": "info",
-                    "message": f"Found {len(json_data)} plans for state: {state}, using fallback recommendations.",
-                    "plans": [
-                        {
-                            "planId": "46944AL0280001",
-                            "rank": 1,
-                            "isBestPlan": True,
-                            "justification": "This is the best option because it balances predictable costs with solid coverage. Since isn't expecting major health issues, the set copays ($20 for primary care, $30 for specialists) are manageable and prevent surprise bills. Crucially, it covers major services like transplant and cancer treatment at no charge, which is a huge safety net. Plus, generic drugs are only $10. Imagine needs a routine checkup and a prescription; knows exactly what will pay, and if something serious happens,'s mostly covered."
-                        },
-                        {
-                            "planId": "46944AL0370001",
-                            "rank": 2,
-                            "justification": "This plan offers the benefit of a copay-only system, meaning that could better budget healthcare expenses. This predictability could be more appealing to those who value financial planning. The copays are consistent, making it easy to budget, but the imaging fee is higher, which may not be ideal if needs imaging regularly. Consider this scenario: If requires imaging after an accident would have to pay $300 at an imaging facility."
-                        }
-                    ]
                 })
         except Exception as e:
             print(f"Error processing form data: {str(e)}")
