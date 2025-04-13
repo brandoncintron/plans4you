@@ -1,7 +1,6 @@
 import os
 import json
 import traceback
-import pandas as pd
 import google.generativeai as genai
 from dotenv import load_dotenv
 
@@ -23,14 +22,14 @@ else:
     print("Error: GOOGLE_API_KEY environment variable not set. AI Agent will not function.")
     GEMINI_MODEL = None
 
-def decisionAgent(user_profile: dict, plans_df: pd.DataFrame):
+def decisionAgent(user_profile: dict, plans_data: list):
     """
     Analyzes insurance plans based on user profile using Gemini AI.
 
     Args:
         user_profile: A dictionary containing user information
                       (e.g., name, age, income, state, dependents, dentalPlanRequired).
-        plans_df: A Pandas DataFrame containing the filtered insurance plan data.
+        plans_data: A list of dictionaries containing the filtered insurance plan data.
 
     Returns:
         A dictionary containing the AI's analysis (best plan ID, ranked list with justifications)
@@ -39,26 +38,32 @@ def decisionAgent(user_profile: dict, plans_df: pd.DataFrame):
     if not GEMINI_MODEL:
         return {"error": "Gemini AI Model is not configured. Check API Key."}
 
-    if plans_df.empty:
+    if not plans_data:
         return {"error": "No plan data provided to the agent."}
 
     # --- Prepare Data for Prompt ---
     try:
-        # Select relevant columns (adjust as needed)
-        relevant_columns = [
+        # Filter and transform the plans data
+        relevant_fields = [
             'PlanId', 'BenefitName', 'CopayInnTier1', 'CoinsInnTier1',
             'IsCovered', 'QuantLimitOnSvc', 'LimitQty', 'LimitUnit', 'Explanation',
             'IssuerId', 'StandardComponentId'
         ]
-        existing_relevant_columns = [col for col in relevant_columns if col in plans_df.columns]
-
-        # Rename PlanId to planId for consistency with frontend expectation *before* sending to AI
-        # This helps the AI use the correct casing in its response.
-        temp_df = plans_df[existing_relevant_columns].copy()
-        if 'PlanId' in temp_df.columns:
-             temp_df.rename(columns={'PlanId': 'planId'}, inplace=True) # Use camelCase
-
-        plans_json_str = temp_df.to_json(orient='records', indent=2)
+        
+        filtered_plans = []
+        for plan in plans_data:
+            filtered_plan = {}
+            for field in relevant_fields:
+                if field in plan:
+                    # Rename PlanId to planId for consistency
+                    if field == 'PlanId':
+                        filtered_plan['planId'] = plan[field]
+                    else:
+                        filtered_plan[field] = plan[field]
+            filtered_plans.append(filtered_plan)
+            
+        # Convert plans to JSON string with proper formatting
+        plans_json_str = json.dumps(filtered_plans, indent=2)
 
         # Limit the size of the plans data sent to the model if necessary
         max_chars = 15000 # Adjust based on model context window

@@ -19,7 +19,7 @@ function HealthcareAIAssistant() {
 
     try {
       const response = await axios.post(
-        "http://plans4you.vercel.app/api/benefits_and_cost_sharing",
+        "http://localhost:5328/api/benefits_and_cost_sharing",
         data,
         {
           headers: {

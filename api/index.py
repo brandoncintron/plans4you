@@ -1,7 +1,6 @@
 import os
 import json
 import traceback
-import pandas as pd
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -122,20 +121,16 @@ def process_user_request():
 
         print(f"Found {len(json_serializable_data)} plan entries for state: {state} matching criteria.")
 
-        # --- Convert to Pandas DataFrame ---
-        # Important: Ensure ObjectId '_id' is handled if needed downstream,
-        # otherwise it might be better to exclude it or convert it to string earlier.
-        # For AI analysis, ObjectId is likely not needed.
-        plans_df = pd.DataFrame(json_serializable_data)
-        # Drop MongoDB ObjectId if not needed for analysis
-        if '_id' in plans_df.columns:
-             plans_df = plans_df.drop(columns=['_id'])
-
+        # --- Process data without Pandas ---
+        # Remove '_id' field from all items in the list if it exists
+        for item in json_serializable_data:
+            if '_id' in item:
+                del item['_id']
 
         # --- Call AI Agent ---
         print("Calling AI Agent for analysis...")
-        # Pass the DataFrame directly
-        ai_response = decisionAgent(form_data, plans_df)
+        # Pass the list of plans directly
+        ai_response = decisionAgent(form_data, json_serializable_data)
 
         if not ai_response or "error" in ai_response:
             print(f"AI Agent error: {ai_response.get('error', 'Unknown error')}")
