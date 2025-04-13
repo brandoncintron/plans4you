@@ -28,11 +28,7 @@ function HealthcareAIAssistant() {
         }
       );
 
-      console.log("Response status:", response.status);
-      console.log("Data sent to server:", data);
-
       const recommendationData = response.data;
-      console.log("Received response:", recommendationData);
       setAiResponse(recommendationData);
     } catch (error) {
       console.error("Error fetching recommendations:", error);
